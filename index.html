@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+</head>    
+<body>
+    <style>
+        #auth{
+
+            margin-left: 40%;
+            margin-top: 10%;
+        }
+
+        input{
+            margin-bottom: 10px;
+
+        }
+    </style>
+
+    <div id="app">
+
+        <form>
+            <div id="auth">
+                <label for="email">Email:</label><input type="text" id="email" v-model="email"><br>
+                <label for="password">Senha:</label><input type="password" id="password" v-model="pass"><br>
+                <button v-on:click="doLogin()">login</button><br><br>
+
+                {{ alert }}
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        async function loginRequest(){
+
+            if(app.email == "" || app.pass == ""){
+                app.alert = "É necessário preencher todos os campos acima";
+                return;
+            }
+            
+            var data = {"email": app.email,
+                        "senha": app.pass};
+
+            var request = axios({
+                "method": "post",
+                "url": "/login",
+                "data": data});
+                
+            try{
+                response = await request;
+                app.payload = response;
+            }
+            catch(error){
+                app.alert = "Falha de acesso";
+            }
+
+            app.alert = app.payload.resultado;
+        }
+
+        var app = new Vue({
+
+            el: '#app',
+
+            data:{
+                email: '',
+                pass: '',
+                payload: '',
+                alert:'',
+            },
+
+            methods:{
+
+                doLogin: loginRequest,
+            },
+        });
+    </script>
+</body>
+</html>
